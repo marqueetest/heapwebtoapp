@@ -1,0 +1,8 @@
+[27-Feb-2019 07:01:39 US/Central] PHP Fatal error:  Call to undefined method Coupon_model::updateCoupon() in /home/heaplan/public_html/dev/application/controllers/Coupon.php on line 86
+[02-Mar-2019 07:05:19 US/Central] PHP Fatal error:  Call to undefined method Client_model::getForeword() in /home/heaplan/public_html/dev/application/controllers/Client.php on line 570
+[02-Mar-2019 07:05:46 US/Central] PHP Fatal error:  Call to a member function query() on null in /home/heaplan/public_html/dev/application/models/Client_model.php on line 270
+[02-Mar-2019 07:16:08 US/Central] PHP Fatal error:  Call to undefined function DBout() in /home/heaplan/public_html/dev/application/views/education-for-protection/foreword_edit.php on line 45
+[02-Mar-2019 07:32:09 US/Central] PHP Fatal error:  Call to a member function result_array() on boolean in /home/heaplan/public_html/dev/application/models/Client_model.php on line 282
+[04-Mar-2019 03:39:35 US/Central] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/heaplan/public_html/dev/application/views/education-for-protection/clients/update.php on line 100
+[04-Mar-2019 03:40:06 US/Central] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/heaplan/public_html/dev/application/views/education-for-protection/clients/update.php on line 109
+[08-Mar-2020 18:31:13 US/Central] Unable to verify temporary file contents for atomic writing.
