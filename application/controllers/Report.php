@@ -96,10 +96,8 @@ class Report extends MY_Controller {
 	}
 
 	public function reportStep1( $client_id, $report_id = 0, $term = 0 ) {
-
-		if( $this->client_model->isAdviserClient($this->adviser_id, $client_id) ) {
-			print_r("client_id");
-			print_r($client_id);
+		$adviser_id = $this->client_model->getSingleColumn("adviser_id", "SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_id."'");
+		if( $this->client_model->isAdviserClient($adviser_id, $client_id) ) {
 			$params = array("id" => $client_id);
 			$client = $this->client_model->heapGetClient( $params );
 			$this->data["client"] = $client[0];
@@ -216,7 +214,9 @@ class Report extends MY_Controller {
 
 	public function reportStep2( $client_id, $report_id = 0, $term = 0 ) {
 
-		if( $this->client_model->isAdviserClient($this->adviser_id, $client_id) ) {
+		$adviser_id = $this->client_model->getSingleColumn("adviser_id", "SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_id."'");
+
+		if( $this->client_model->isAdviserClient($adviser_id, $client_id) ) {
 
 			$params = array("id" => $client_id);
 			$client = $this->client_model->heapGetClient( $params );
@@ -798,12 +798,14 @@ class Report extends MY_Controller {
 	}
 
 	public function viewReport( $client_id, $report_id, $term = "" ) {
-
+		
 		$params = array("id" => $report_id);
 		$report = $this->report_model->getReport( $params );
+
 		if( $report ) {
 			$this->data["report"] = $report[0];
-			if( $this->client_model->isAdviserClient($this->adviser_id, $client_id) ) {
+			$adviser_id = $this->client_model->getSingleColumn("adviser_id", "SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_id."'");
+			if( $this->client_model->isAdviserClient($adviser_id, $client_id) ) {
 				/* GET ADVISER */
 				$adviser = $this->client_model->heapGetAdviser( array("id" => $this->adviser_id) );
 				$adviser = $adviser[0];
@@ -1130,7 +1132,6 @@ class Report extends MY_Controller {
 
 			    $this->data["client_id"] = $client_id;
 			    $this->data["report_id"] = $report_id;
-
 			    $this->load->view('common/header', $this->data);
 				$this->load->view('heap/clients/view_report', $this->data);
 				$this->load->view('common/footer', $this->data);

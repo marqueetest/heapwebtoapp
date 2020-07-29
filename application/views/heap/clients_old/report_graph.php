@@ -37,7 +37,7 @@ if ( !file_exists($r['calc_file']) ) {
 
 $input_file = $r['calc_file'];
 
-if(!file_exists($input_file)) die("Could not find input file '$input_file'");
+if(!file_exists($input_file)) die("Could not find input file akash '$input_file'");
 
 $data = file($input_file);
 

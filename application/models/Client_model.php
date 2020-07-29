@@ -92,13 +92,6 @@ class Client_model extends CI_Model {
 
 
         $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
-
-        // print_r($params);
-        // echo "<pre>";
-        //     print_r($where);
-        // echo "</pre>";
-        // echo $query;
-        // exit();
         $result = $this->db->query( $query );
         if( $result->num_rows() > 0 ) {
             return $result->result_array();
@@ -107,6 +100,24 @@ class Client_model extends CI_Model {
         }
     }
 
+    // client start
+    // public function getSingleColumn($column,$sql){
+	//     $res = mysql_query($sql);
+	//     if ( $row = mysql_fetch_assoc($res) )
+	// 	    return $row[$column];
+    // }
+
+    public function getSingleColumn($column, $query){
+        $result = $this->db->query( $query );
+        if(count($result->result_array())>0){
+            foreach($result->result_array() as $row){
+                return $row[$column];
+            }
+        }
+    }
+    
+    // client end
+    
     public function isAdviserClient( $adviser_id, $client_id ) {
         $query = "SELECT id FROM `adviser_clients` WHERE `adviser_id` = '".$adviser_id."' AND `client_id` = '".$client_id."'";
         $result = $this->db->query( $query );
