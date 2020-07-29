@@ -15,13 +15,76 @@ class Client extends MY_Controller {
     	$this->load->library('form_validation');
 
 		$this->load->model("client_model");
+		$this->load->model("adviser_model");
 
 		$this->adviser_id = $this->session->userdata("adviser_id");
+
+		$this->client_id = $this->session->userdata("client_id");
 	}
 
 	public function index() {
 		$this->load->view('errors/html/error_404');
 	}
+
+	// client new flow code start
+	
+	public function settings() {
+		if( count($this->input->post()) > 0 ) {
+			$this->form_validation->set_rules('password', 'Current Password', 'trim|required|callback_password_check');
+            $this->form_validation->set_rules('new_password', 'New Password', 'trim|required|min_length[6]|max_length[100]');
+            $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[new_password]');
+
+            if ($this->form_validation->run() == FALSE) {
+                // ERROR IN FORM
+            } else {
+            	/* UPDATE SETTINGS */
+            	$update_data = array();
+				$password= $this->input->post("new_password");
+				$update_data["password"] = password_hash( $password, PASSWORD_DEFAULT);
+				$updateClient = $this->client_model->updateClient( $update_data, $this->client_id );
+				if( $updateClient ) {
+					$this->session->set_flashdata('success', 'Password updated successfully!');
+				} else {
+					$this->session->set_flashdata('error', 'There is a problem processing your request!');
+				}
+            }
+
+		}
+
+		$params = array("id" => $this->client_id);
+		$client = $this->client_model->heapGetClient1( $params );
+
+		if( $client ) {
+			$client = $client[0];
+			$this->data["client"] = $client;
+		}
+
+		$this->load->view('common/header', $this->data);
+		$this->load->view('common/settings', $this->data);
+		$this->load->view('common/footer', $this->data);
+	}
+
+	public function password_check(){
+		$password = $this->input->post('password');
+		$params = array("id" => $this->client_id);
+		$client = $this->client_model->heapGetClient1( $params );
+		if( $client ) {
+			$client = $client[0];
+			$match_password = password_verify( $password , $client["password"] );
+			if($match_password == 1) {
+				return true;
+			}else{
+				$this->form_validation->set_message('password_check', 'Current password does not match.');
+				return FALSE;
+			}
+		} else {
+			$this->form_validation->set_message('password_check', 'Invalid Request.');
+		   return FALSE;
+		}
+	    return TRUE;
+	}
+	
+	// client new flow code end
 
 	public function registerClient() {
 

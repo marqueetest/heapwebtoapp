@@ -41,40 +41,11 @@
 				<div class="navbar-btn">
 					<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
 				</div>
-				<!--<form class="navbar-form navbar-left">
-					<div class="input-group">
-						<input type="text" value="" class="form-control" placeholder="Search dashboard...">
-						<span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
-					</div>
-				</form>-->
 				<div id="navbar-menu">
 					<ul class="nav navbar-nav navbar-right">
-						<!--<li class="dropdown">
-							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-								<i class="lnr lnr-alarm"></i>
-								<span class="badge bg-danger">5</span>
-							</a>
-							<ul class="dropdown-menu notifications">
-								<li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
-								<li><a href="#" class="more">See all notifications</a></li>
-							</ul>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-question-circle"></i> <span>Help</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Basic Use</a></li>
-								<li><a href="#">Working With Data</a></li>
-								<li><a href="#">Security</a></li>
-								<li><a href="#">Troubleshooting</a></li>
-							</ul>
-						</li>-->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="lnr lnr-user"></i> <span><?php echo $this->session->userdata('first_name')." ".$this->session->userdata('last_name') ?></span> <i class="icon-submenu lnr lnr-chevron-down"></i>
+								<i class="lnr lnr-user"></i> <span><?php echo $this->session->userdata('username') ?></span> <i class="icon-submenu lnr lnr-chevron-down"></i>
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="<?php echo base_url() ?>settings"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
@@ -92,6 +63,8 @@
 				<nav>
 					<ul class="nav">
 						<li><a href="<?php echo base_url() ?>"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+						<li><a href="<?php echo base_url(). "report/reportStep1/".$this->session->userdata("client_id") ?>"><i class="lnr lnr-file-add"></i> <span>Create Report</span></a></li>
+						<li><a href="<?php echo base_url(). "report/listReports/".$this->session->userdata("client_id") ?>"><i class="lnr lnr-eye"></i> <span>View Report</span></a></li>
 					</ul>
 				</nav>
 			</div>

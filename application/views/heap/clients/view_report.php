@@ -99,7 +99,7 @@ h3.saved_reports {
 							<div class="col-md-12">
 								<a href="<?php echo base_url() ?>download-report/<?php echo $client_id ?>/<?php echo $report_id ?>" class="btn btn-primary pull-right" target="_blank"><i class="fa fa-download"></i>&nbsp;Download PDF</a>
 
-								<a href="<?php echo base_url() ?>heap-clients" class="btn btn-primary pull-right">Heap Clients</a>
+								<!-- <a href="<?php //  echo base_url() ?>heap-clients" class="btn btn-primary pull-right">Heap Clients</a> -->
 
 								<a href="<?php echo base_url() ?>" class="btn btn-primary pull-right">Dashboard</a>
 							</div>

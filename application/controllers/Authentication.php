@@ -13,54 +13,6 @@ class Authentication extends MY_Controller {
 		die("Are you lost?");
 	}
 
-	// public function login() {
-	// 	if( $this->isLogin() ) {
-	// 		redirect(base_url(), 'refresh');
-	// 	}
-	// 	if( count($this->input->post()) > 0 ) {
-	// 		if( $this->input->post("username") != "" && $this->input->post("password") != "" ) {
-	// 			$username = $this->input->post("username", TRUE);
-	// 			$password = $this->input->post("password", TRUE);
-	// 			$loginData = $this->user_model->validateLogin( $username, $password );
-	// 			if( $loginData ) {
-	// 				/* Login successful. Set session and add login entry */
-	// 				$loginData = $loginData[0];
-	// 				$match_password = password_verify( $password , $loginData['password'] );
-	// 				if($match_password == 1){
-	// 					$permissions = $this->user_model->getAdviserPermissions( $loginData["id"] );
-	// 					$permissions = $permissions[0]["adviser_permissions"];
-	// 					$permissions = explode(",", $permissions);
-	// 					$sessionData = array(
-	// 						"adviser_id" => $loginData["id"],
-	// 						"username" => $loginData["username"],
-	// 						"first_name" => $loginData["first_name"],
-	// 						"last_name" => $loginData["last_name"],
-	// 						"auth" => TRUE,
-	// 						"cgroup_id" => $loginData["cgroup_id"],
-	// 						"permissions" => $permissions,
-	// 						'logged_in' => TRUE
-	// 					);
-	// 					$this->session->set_userdata($sessionData);
-	// 					if($this->input->post("save")){
-	// 						$day = time() + 3600;
-	// 						setcookie('remember_user', $this->input->post("username"), $day);
-	// 						setcookie('remember_pwd', $this->input->post("password"), $day);
-	// 					}
-	// 					//$this->user_model->addLoginHistory( $loginData["id"] );
-	// 					redirect(base_url(), 'refresh');
-	// 				} else {
-	// 					$this->data['error'] = "Please enter correct password";
-	// 				}
-	// 			} else {
-	// 				 $this->data['error'] = "Wrong username/email or password!";
-	// 			}
-	// 		} else {
-	// 			$this->data['error'] = "Please enter username/email or password!";
-	// 		}
-	// 	}
-	// 	$this->load->view("login", $this->data);
-	// }
-
 	public function login() {
 		if( $this->isLogin() ) {
 			redirect(base_url(), 'refresh');
@@ -80,6 +32,7 @@ class Authentication extends MY_Controller {
 							$adviser_id = getSingleColumn("adviser_id","SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_row["id"]."'");
 							$sessionData = array(
 								"client_id" => $client_row["id"],
+								"adviser_id" => $adviser_id,
 								"username" => $client_row["username"],
 								"first_name" => $client_row["first_name"],
 								"last_name" => $client_row["last_name"],
@@ -95,6 +48,8 @@ class Authentication extends MY_Controller {
 							}
 							//$this->user_model->addLoginHistory( $loginData["id"] );
 							redirect(base_url(), 'refresh');
+							// redirect('report/reportStep1/'.$client_row["id"], 'refresh');
+							
 						}else{
 							$this->data['error'] = "Invalid password";
 						}

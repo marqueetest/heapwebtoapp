@@ -5,6 +5,58 @@ class Client_model extends CI_Model {
             $this->load->database();
     }
 
+    // ================client new flow start ===================
+
+    public function updateClient($params, $client_id ) {
+        $set = "";
+        if( !empty($params) ) {
+            $counter = 1;
+            $count = 1;
+            foreach( $params as $key => $val ) {
+                    $set .= $key." = "."'".$val."'";
+                // if( $counter != count( $params ) ) {
+                //         $where .= ", ";
+                //         $counter++;
+                // }
+            }
+
+        }
+        $query = "UPDATE `clients` SET ".$set." WHERE `id` = '".$client_id."'";
+        $result = $this->db->query( $query );
+        if( $result ) {
+        return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function heapGetClient1( $params = array() ) {
+        $where = "";
+        if( !empty( $params ) ) {
+                $counter = 1;
+                $where .= " WHERE ";
+                foreach( $params as $key => $val ) {
+                        $where .= $key." = "."'".$val."'";
+                        if( $counter != count( $params ) ) {
+                                $where .= " AND ";
+                                $counter++;
+                        }
+                }
+
+        }
+        $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
+        $result = $this->db->query( $query );
+        if( $result->num_rows() > 0 ) {
+                return $result->result_array();
+        } else {
+                return false;
+        }
+    }
+
+    //================ client new flow end=======================
+
+
+
     public function listHeapClients( $adviser_id ) {
         $query = "SELECT c.*,ac.coupon,IF(c.api_access_admin_controll = '0', '<span style=\"color:red\">Disable</span>', 'Enable') as api_access FROM clients c , adviser_clients ac WHERE c.id = ac.client_id AND ac.adviser_id = '".$adviser_id ."' ORDER by c.id DESC";
         $result = $this->db->query( $query );

@@ -41,7 +41,7 @@
 						
 						<div class="form-group">
 							<label for="username" class="control-label">Username:</label>
-							<input type="text" class="form-control" id="username" name="username" value="<?php echo $adviser['username'] ?>" readonly />
+							<input type="text" class="form-control" id="username" name="username" value="<?php echo $client['username'] ?>" readonly />
 						</div>
 
 						<div class="form-group">

@@ -53,7 +53,9 @@ $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['settings'] = "adviser/settings";
+// $route['settings'] = "adviser/settings";
+
+$route['settings'] = "client/settings";
 
 $route['heap-clients'] = "client/listHeapClients";
 $route['register-client'] = "client/registerClient";

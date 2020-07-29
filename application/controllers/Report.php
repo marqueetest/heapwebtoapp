@@ -79,6 +79,7 @@ class Report extends MY_Controller {
 	}
 
 	public function createReport( $client_id, $term = 0 ) {
+
 		if( $this->client_model->isAdviserClient($this->adviser_id, $client_id) ) {
 
 			$params = array("id" => $client_id);
@@ -96,6 +97,7 @@ class Report extends MY_Controller {
 	}
 
 	public function reportStep1( $client_id, $report_id = 0, $term = 0 ) {
+
 		$adviser_id = $this->client_model->getSingleColumn("adviser_id", "SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_id."'");
 		if( $this->client_model->isAdviserClient($adviser_id, $client_id) ) {
 			$params = array("id" => $client_id);
@@ -1160,9 +1162,12 @@ class Report extends MY_Controller {
 	}
 
 	public function downloadReport( $client_id = 0, $report_id = 0, $term = "" ) {
+		
+
 		$this->load->library("Pdf");
 		$this->load->library("financials");
 
+		
         // create new PDF document
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -1197,15 +1202,24 @@ class Report extends MY_Controller {
 
 		/*REPORT STARTS*/
 	    //require_once(ASSETS_PATH.'/php-bin/phpswf_charts/charts.php');
-	    //require_once("heap.class.php");
+		//require_once("heap.class.php");
+	
+
 	    if( $report_id > 0 ) {
-	    	$params = array("id" => $this->adviser_id);
-	    	$adviser = $this->client_model->heapGetAdviser( $params );
-	    	$adviser11 = $this->client_model->getAdviserEmailSetting( $this->adviser_id );
-	    	$adviser11 = isset($adviser11[0]) ? $adviser11[0] : array();
+	
+			$adviser_id = $this->client_model->getSingleColumn("adviser_id", "SELECT `adviser_id` from adviser_clients where client_id = '".(int)$client_id."'");
+
+			$params = array("id" => $adviser_id);
+			
+			$adviser = $this->client_model->heapGetAdviser( $params );
+			
+			$adviser11 = $this->client_model->getAdviserEmailSetting( $adviser_id );
+			
+			$adviser11 = isset($adviser11[0]) ? $adviser11[0] : array();
+			
 	    	if( $adviser ) {
-	    		$adviser = $adviser[0];
-	    		if( $this->client_model->isAdviserClient($this->adviser_id, $client_id) ) {
+				$adviser = $adviser[0];
+	    		if( $this->client_model->isAdviserClient($adviser_id, $client_id) ) {
 
 	    			/*FIXES*/
 	    			$other_expenses = 0;
@@ -1282,10 +1296,17 @@ class Report extends MY_Controller {
 					*/
 
 					if (strpos($rep['calc_file'], 'advisors_a') !== false) {
+						// print_r(" ======= File Present ======== ");
 						$calc_file = file($rep['calc_file']);
 					}else{
-				    	$calc_file = file(ASSETS_PATH.$rep['calc_file']);
+						// print_r(" ======= File not Present ======== ");
+
+						$calc_file = file(ASSETS_PATH.$rep['calc_file']);
+						// print_r(ASSETS_PATH.$rep['calc_file']);
 					}
+
+					// return exit(0);
+
 				    $total_interest_paid = 0;
 				    $total_debt_paid = 0;
 				    $year = 0;
@@ -1504,7 +1525,7 @@ class Report extends MY_Controller {
 				    $this->data["adviser11"] = $adviser11;
 				    $this->data["graphFileName"] = $graphFileName;
 
-				    /* $this->load->view('heap/clients/report_pdf', $this->data); */
+				    //  $this->load->view('heap/clients/report_pdf', $this->data); 
 
 				    $pdf_content = $this->load->view('heap/clients/report_pdf', $this->data, true);
 				    $pdf->writeHTML($pdf_content, true, false, false, false, '');

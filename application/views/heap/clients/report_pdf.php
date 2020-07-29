@@ -600,7 +600,7 @@ h3{
 
                                 <tr>
                                     <td align="center" valign="bottom">
-                                        <img src="<?php echo base_url()."assets/graphs/".$graphFileName; ?>" height="400" width="650" />
+                                            <img src="<?php  echo "//".$_SERVER['HTTP_HOST']."/portal/assets/graphs/".$graphFileName; ?>" height="400" width="650" />
                                         <br />
                                     </td>
                                 </tr>
@@ -625,8 +625,8 @@ h3{
                                                     <p>*The H.E.A.P.&#8482; numbers calculated for this report are based on the inputs given to your H.E.A.P.&#8482; advisor. It is understood that you will be able to pay off your mortgage debt sooner if you earn more income and/or decrease your variable expenses over the life of the plan. It is understood that it will take longer to pay off your mortgage debt if you decrease your income and/or increase your variable expenses over the life of
                                                     the plan.</p>
                                                     <p>If you need to re-run these numbers due to a substantial change in your income or expenses, please contact <?php echo $adviser['first_name']." ".$adviser['last_name']; ?> at <?php echo !empty($adviser['phone']) ? $adviser['phone'] : $adviser['email_address']; ?></p>
-                                                        												
-                                    				<?php
+
+                                        			<?php
                                                     if ( isset($adviser11['email_footer']) && $adviser11['email_footer'] != '' )
                                                         echo $adviser11['email_footer'];
                                                     ?>
