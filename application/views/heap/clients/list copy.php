@@ -1,7 +1,7 @@
 <!-- MAIN -->
 <div class="main">
-	<!-- MAIN CONTENT -->
-	<div class="main-content">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
 		<div class="container-fluid">
 			<!-- OVERVIEW -->
 			<div class="panel panel-headline">
@@ -61,13 +61,13 @@
 										<!--<td class="col-md-1"><?php //echo $client["coupon"] ?></td>
 										<td><?php //echo $client["api_access"] ?></td>-->
 										<td><?php echo $client["created_date"] ?></td>
-										<td> 
+										<td>
 
 											<div class="btn-group pull-right">
                                                <button class="btn btn-primary" type="button">Actions</button>
                                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button"><span class="caret"></span></button>
                                                	<ul role="menu" class="dropdown-menu">
-                                                  
+
                                                		<li><a href="<?php echo base_url() ?>report/reportStep1/<?php echo $client['id'] ?>" class="create-report">
 														<i class="fa fa-plus"></i> Create Report
 													</a></li>
@@ -83,7 +83,7 @@
 
                                                	</ul>
                                             </div>
-											
+
 										</td>
 									</tr>
 									<?php
@@ -101,10 +101,10 @@
 				</div>
 			</div>
 			<!-- END OVERVIEW -->
-			
+
 		</div>
 	</div>
 	<!-- END MAIN CONTENT -->
 </div>
 <!-- END MAIN -->
-		
+

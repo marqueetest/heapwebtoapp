@@ -5,62 +5,6 @@ class Client_model extends CI_Model {
             $this->load->database();
     }
 
-    // ================client new flow start ===================
-
-    public function updateClient($params, $client_id ) {
-        $set = "";
-        if( !empty($params) ) {
-            $counter = 1;
-            $count = 1;
-            foreach( $params as $key => $val ) {
-                    $set .= $key." = "."'".$val."'";
-                    if($count == 1){
-                        $set .= ',';
-                    }
-                    $count++;
-                // if( $counter != count( $params ) ) {
-                //         $where .= ", ";
-                //         $counter++;
-                // }
-            }
-
-    }
-        $query = "UPDATE `clients` SET ".$set." WHERE `id` = '".$client_id."'";
-        $result = $this->db->query( $query );
-        if( $result ) {
-        return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function heapGetClient1( $params = array() ) {
-        $where = "";
-        if( !empty( $params ) ) {
-                $counter = 1;
-                $where .= " WHERE ";
-                foreach( $params as $key => $val ) {
-                        $where .= $key." = "."'".$val."'";
-                        if( $counter != count( $params ) ) {
-                                $where .= " AND ";
-                                $counter++;
-                        }
-                }
-
-        }
-        $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
-        $result = $this->db->query( $query );
-        if( $result->num_rows() > 0 ) {
-                return $result->result_array();
-        } else {
-                return false;
-        }
-    }
-
-    //================ client new flow end=======================
-
-
-
     public function listHeapClients( $adviser_id ) {
         $query = "SELECT c.*,ac.coupon,IF(c.api_access_admin_controll = '0', '<span style=\"color:red\">Disable</span>', 'Enable') as api_access FROM clients c , adviser_clients ac WHERE c.id = ac.client_id AND ac.adviser_id = '".$adviser_id ."' ORDER by c.id DESC";
         $result = $this->db->query( $query );
@@ -73,7 +17,7 @@ class Client_model extends CI_Model {
 
     public function addClient( $params ) {
 
-        $query1 = "INSERT INTO `clients` (`first_name`, `last_name`, `username`, `password`, `phone`, `email_address`, `address1`, `address2`, `city`, `state`, `zipcode`, `api_access_admin_controll`, `created_date`) VALUES('".$params["first_name"]."', '".$params["last_name"]."', '".$params["username"]."', '".$params["password"]."', '".$params["phone"]."', '".$params["email_address"]."', '".$params["address1"]."', '".$params["address2"]."', '".$params["city"]."', '".$params["state"]."', '".$params["zipcode"]."', '".$params["api_access_admin_controll"]."', '".$params["created_date"]."')";
+        $query1 = "INSERT INTO `clients` (`first_name`, `last_name`, `username`, `password`, `plain_password`, `phone`, `email_address`, `address1`, `address2`, `city`, `state`, `zipcode`, `api_access_admin_controll`, `created_date`) VALUES('".$params["first_name"]."', '".$params["last_name"]."', '".$params["username"]."', '".$params["password"]."', '".$params["plain_password"]."', '".$params["phone"]."', '".$params["email_address"]."', '".$params["address1"]."', '".$params["address2"]."', '".$params["city"]."', '".$params["state"]."', '".$params["zipcode"]."', '".$params["api_access_admin_controll"]."', '".$params["created_date"]."')";
         $result1 = $this->db->query( $query1 );
         if( $result1 ) {
             $client_id = $this->db->insert_id();
@@ -88,7 +32,6 @@ class Client_model extends CI_Model {
         } else {
             return false;
         }
-
     }
 
     public function deleteClient( $client_id ) {
@@ -112,7 +55,7 @@ class Client_model extends CI_Model {
         if($params["password"] == '' || $params["confirm_password"] == '' ){
             $query1 = "UPDATE `clients` SET `first_name` = '" . $params["first_name"] . "', `last_name` = '" . $params["last_name"] . "', `username` = '" . $params["username"] . "', `phone` = '" . $params["phone"] . "', email_address = '" . $params["email_address"] . "', address1 = '" . $params["address1"] . "', address2 = '" . $params["address2"] . "', city = '" . $params["city"] . "', state = '" . $params["state"] . "', zipcode = '" . $params["zipcode"] . "', `api_access_admin_controll` = '" . $params["api_access_admin_controll"] . "' WHERE `id` = '".$params["client_id"]."'";
         }else{
-            $query1 = "UPDATE `clients` SET `first_name` = '" . $params["first_name"] . "', `last_name` = '" . $params["last_name"] . "', `username` = '" . $params["username"] . "', `password` = '" . $params["password"] . "', `phone` = '" . $params["phone"] . "', email_address = '" . $params["email_address"] . "', address1 = '" . $params["address1"] . "', address2 = '" . $params["address2"] . "', city = '" . $params["city"] . "', state = '" . $params["state"] . "', zipcode = '" . $params["zipcode"] . "', `api_access_admin_controll` = '" . $params["api_access_admin_controll"] . "' WHERE `id` = '".$params["client_id"]."'";
+            $query1 = "UPDATE `clients` SET `first_name` = '" . $params["first_name"] . "', `last_name` = '" . $params["last_name"] . "', `username` = '" . $params["username"] . "', `password` = '" . $params["password"] . "', `plain_password` = '" . $params["plain_password"] . "', `phone` = '" . $params["phone"] . "', email_address = '" . $params["email_address"] . "', address1 = '" . $params["address1"] . "', address2 = '" . $params["address2"] . "', city = '" . $params["city"] . "', state = '" . $params["state"] . "', zipcode = '" . $params["zipcode"] . "', `api_access_admin_controll` = '" . $params["api_access_admin_controll"] . "' WHERE `id` = '".$params["client_id"]."'";
         }
         $result1 = $this->db->query( $query1 );
         if( $result1 ) {
@@ -148,6 +91,14 @@ class Client_model extends CI_Model {
 
 
         $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
+
+        // print_r($params);
+        // echo "<pre>";
+        //     print_r($where);
+        // echo "</pre>";
+        // echo $query;
+        // exit();
+        
         $result = $this->db->query( $query );
         if( $result->num_rows() > 0 ) {
             return $result->result_array();
@@ -156,24 +107,6 @@ class Client_model extends CI_Model {
         }
     }
 
-    // client start
-    // public function getSingleColumn($column,$sql){
-	//     $res = mysql_query($sql);
-	//     if ( $row = mysql_fetch_assoc($res) )
-	// 	    return $row[$column];
-    // }
-
-    public function getSingleColumn($column, $query){
-        $result = $this->db->query( $query );
-        if(count($result->result_array())>0){
-            foreach($result->result_array() as $row){
-                return $row[$column];
-            }
-        }
-    }
-    
-    // client end
-    
     public function isAdviserClient( $adviser_id, $client_id ) {
         $query = "SELECT id FROM `adviser_clients` WHERE `adviser_id` = '".$adviser_id."' AND `client_id` = '".$client_id."'";
         $result = $this->db->query( $query );

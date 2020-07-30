@@ -12,80 +12,16 @@ class Client extends MY_Controller {
         $this->load->helper('url');
         $this->load->library('session');
         $this->load->helper(array('form', 'url'));
-    	$this->load->library('form_validation');
+        $this->load->library('form_validation');
 
-		$this->load->model("client_model");
-		$this->load->model("adviser_model");
+    	$this->load->model("client_model");
 
 		$this->adviser_id = $this->session->userdata("adviser_id");
-
-		$this->client_id = $this->session->userdata("client_id");
 	}
 
 	public function index() {
 		$this->load->view('errors/html/error_404');
 	}
-
-	// client new flow code start
-	
-	public function settings() {
-		if( count($this->input->post()) > 0 ) {
-			$this->form_validation->set_rules('password', 'Current Password', 'trim|required|callback_password_check');
-            $this->form_validation->set_rules('new_password', 'New Password', 'trim|required|min_length[6]|max_length[100]');
-            $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[new_password]');
-
-            if ($this->form_validation->run() == FALSE) {
-                // ERROR IN FORM
-            } else {
-            	/* UPDATE SETTINGS */
-            	$update_data = array();
-				$password= $this->input->post("new_password");
-				$update_data["password"] = password_hash( $password, PASSWORD_DEFAULT);
-				$update_data["plain_password"] = $password;
-				$updateClient = $this->client_model->updateClient( $update_data, $this->client_id );
-				if( $updateClient ) {
-					$this->session->set_flashdata('success', 'Password updated successfully!');
-				} else {
-					$this->session->set_flashdata('error', 'There is a problem processing your request!');
-				}
-            }
-
-		}
-
-		$params = array("id" => $this->client_id);
-		$client = $this->client_model->heapGetClient1( $params );
-
-		if( $client ) {
-			$client = $client[0];
-			$this->data["client"] = $client;
-		}
-
-		$this->load->view('common/header', $this->data);
-		$this->load->view('common/settings', $this->data);
-		$this->load->view('common/footer', $this->data);
-	}
-
-	public function password_check(){
-		$password = $this->input->post('password');
-		$params = array("id" => $this->client_id);
-		$client = $this->client_model->heapGetClient1( $params );
-		if( $client ) {
-			$client = $client[0];
-			$match_password = password_verify( $password , $client["password"] );
-			if($match_password == 1) {
-				return true;
-			}else{
-				$this->form_validation->set_message('password_check', 'Current password does not match.');
-				return FALSE;
-			}
-		} else {
-			$this->form_validation->set_message('password_check', 'Invalid Request.');
-		   return FALSE;
-		}
-	    return TRUE;
-	}
-	
-	// client new flow code end
 
 	public function registerClient() {
 
@@ -114,7 +50,8 @@ class Client extends MY_Controller {
 				$register_data["phone"] = $this->input->post("phone");
 				$register_data["email_address"] = $this->input->post("email_address");
 				$register_data["username"] = $this->input->post("username");
-				$register_data["password"] = $this->input->post("password");
+				$register_data["password"] = password_hash($this->input->post("password"), PASSWORD_DEFAULT);
+				$register_data["plain_password"] = $this->input->post("password");
 				$register_data["confirm_password"] = $this->input->post("confirm_password");
 				$register_data["api_access_admin_controll"] = $this->input->post("api_access_admin_controll");
 				$register_data["created_date"] = date("Y-m-d H:i:s");
@@ -202,6 +139,7 @@ class Client extends MY_Controller {
 	    return true;
 	}
 	public function heapUpdateClient( $client_id ) {
+
 		if( $this->client_model->isAdviserClient( $this->adviser_id, $client_id ) ) {
 			$params = array("id" => $client_id);
 			$client = $this->client_model->heapGetClient( $params );
@@ -209,13 +147,14 @@ class Client extends MY_Controller {
 			if( $client ) {
 				$this->data["client"] = $client[0];
 				if( count($this->input->post()) > 0 ) {
+
 					$this->form_validation->set_rules('first_name', 'First Name', 'trim|required');
 					$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
 					$this->form_validation->set_rules('address1', 'Address', 'trim|required');
 					$this->form_validation->set_rules('phone', 'Phone', 'trim|required');
 					$this->form_validation->set_rules('email_address', 'Email', 'trim|required|min_length[6]|max_length[200]valid_email|callback_check_email_address['.$client_id.']');
 					$this->form_validation->set_rules('username', 'Username', 'trim|min_length[4]|max_length[100]|callback_check_username['.$client_id.']');
-					
+
 					// $this->form_validation->set_rules('username', 'Username', 'trim|min_length[4]|max_length[100]|callback_check_username_password|callback_check_username['.$client_id.']');
 					$password =  $this->input->post("password");
 					$confirm_password = $this->input->post("confirm_password");
@@ -250,7 +189,7 @@ class Client extends MY_Controller {
 						} else {
 							$password  = password_hash($this->input->post("password"), PASSWORD_DEFAULT);
 							$model_data["password"] = $password;
-							$model_data["password_old"] = $this->input->post("password");
+							$model_data["plain_password"] = $this->input->post("password");
 							$model_data["confirm_password"] = $this->input->post("confirm_password");
 						}
 						$client = $this->client_model->heapUpdateClient( $model_data );
@@ -264,7 +203,9 @@ class Client extends MY_Controller {
 						}
 		            }
 				}
+
 				$this->data["states"] = array(
+
 								"AL" => "Alabama",
                 				"AK" => "Alaska",
                 				"AZ" => "Arizona",
@@ -318,7 +259,7 @@ class Client extends MY_Controller {
                                 "WV" => "West Virginia",
                                 "WI" => "Wisconsin",
                                 "WY" => "Wyoming"
-							);
+												);
 
 				$params = array("id" => $client_id);
 				$client = $this->client_model->heapGetClient( $params );
@@ -412,6 +353,7 @@ class Client extends MY_Controller {
 		$params = array("id" => $this->adviser_id);
 		$adviser = $this->client_model->heapGetAdviser( $params );
 		$adviser = $adviser[0];
+
 		if( $adviser ) {
 			$this->data["thankyou_page_header"] = $adviser["thankyou_page_header"];
 			$this->data["custom_landing_header"] = $adviser["custom_landing_header"];
