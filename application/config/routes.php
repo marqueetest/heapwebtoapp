@@ -57,6 +57,8 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['settings'] = "client/settings";
 
+$route['reset-password'] =  "authentication/resetPassword";
+
 $route['heap-clients'] = "client/listHeapClients";
 $route['register-client'] = "client/registerClient";
 $route['heap-update-client/(:any)'] = 'client/heapUpdateClient/$1';

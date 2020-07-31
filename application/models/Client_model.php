@@ -5,62 +5,6 @@ class Client_model extends CI_Model {
             $this->load->database();
     }
 
-    // ================client new flow start ===================
-
-    public function updateClient($params, $client_id ) {
-        $set = "";
-        if( !empty($params) ) {
-            $counter = 1;
-            $count = 1;
-            foreach( $params as $key => $val ) {
-                    $set .= $key." = "."'".$val."'";
-                    if($count == 1){
-                        $set .= ',';
-                    }
-                    $count++;
-                // if( $counter != count( $params ) ) {
-                //         $where .= ", ";
-                //         $counter++;
-                // }
-            }
-
-    }
-        $query = "UPDATE `clients` SET ".$set." WHERE `id` = '".$client_id."'";
-        $result = $this->db->query( $query );
-        if( $result ) {
-        return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function heapGetClient1( $params = array() ) {
-        $where = "";
-        if( !empty( $params ) ) {
-                $counter = 1;
-                $where .= " WHERE ";
-                foreach( $params as $key => $val ) {
-                        $where .= $key." = "."'".$val."'";
-                        if( $counter != count( $params ) ) {
-                                $where .= " AND ";
-                                $counter++;
-                        }
-                }
-
-        }
-        $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
-        $result = $this->db->query( $query );
-        if( $result->num_rows() > 0 ) {
-                return $result->result_array();
-        } else {
-                return false;
-        }
-    }
-
-    //================ client new flow end=======================
-
-
-
     public function listHeapClients( $adviser_id ) {
         $query = "SELECT c.*,ac.coupon,IF(c.api_access_admin_controll = '0', '<span style=\"color:red\">Disable</span>', 'Enable') as api_access FROM clients c , adviser_clients ac WHERE c.id = ac.client_id AND ac.adviser_id = '".$adviser_id ."' ORDER by c.id DESC";
         $result = $this->db->query( $query );
@@ -650,6 +594,118 @@ class Client_model extends CI_Model {
             return array();
         }
     }
+
+        // ================client new flow start ===================
+
+        public function updateClient($params, $client_id ) {
+            $set = "";
+            if( !empty($params) ) {
+                $counter = 1;
+                $count = 1;
+                foreach( $params as $key => $val ) {
+                        $set .= $key." = "."'".$val."'";
+                        if($count == 1){
+                            $set .= ',';
+                        }
+                        $count++;
+                    // if( $counter != count( $params ) ) {
+                    //         $where .= ", ";
+                    //         $counter++;
+                    // }
+                }
+    
+        }
+            $query = "UPDATE `clients` SET ".$set." WHERE `id` = '".$client_id."'";
+            $result = $this->db->query( $query );
+            if( $result ) {
+            return true;
+            } else {
+                return false;
+            }
+        }
+    
+        public function heapGetClient1( $params = array() ) {
+            $where = "";
+            if( !empty( $params ) ) {
+                    $counter = 1;
+                    $where .= " WHERE ";
+                    foreach( $params as $key => $val ) {
+                            $where .= $key." = "."'".$val."'";
+                            if( $counter != count( $params ) ) {
+                                    $where .= " AND ";
+                                    $counter++;
+                            }
+                    }
+    
+            }
+            $query = "SELECT * FROM `clients` ".$where." ORDER BY `id` DESC";
+            $result = $this->db->query( $query );
+            if( $result->num_rows() > 0 ) {
+                    return $result->result_array();
+            } else {
+                    return false;
+            }
+        }
+    
+        public function validateClientEmail($cgroup_id, $user_email ){
+            $query = "SELECT clients.* FROM clients
+                Inner Join client_cgroups ON client_cgroups.client_id= clients.id AND client_cgroups.cgroup_id= cgroup_id
+                WHERE clients.email_address = '$user_email'";
+            $result = $this->db->query( $query );
+            if( $result->num_rows() > 0 ) {
+                return $result->result_array();
+            } else {
+                return false;
+            }
+        }
+
+        public function random_numbers($digits) {
+            $min = pow(10, $digits - 1);
+            $max = pow(10, $digits) - 1;
+            return mt_rand($min, $max);
+        }
+
+        public function updateClientResetPassword($reset_password_pincode, $reset_password_expiry, $client_id ){
+            $query = "UPDATE clients SET  reset_password_pincode = '".(int)$reset_password_pincode."',reset_password_expiry = '".$reset_password_expiry."' WHERE id= '".$client_id."'";
+            $result = $this->db->query( $query );
+            if( $result ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function resetClientPassword( $resetData ) {
+            $change_user_email = $resetData['change_user_email'];
+            $verification_code = $resetData['verification_code'];
+            $cgroup_id = $resetData['cgroup_id'];
+            $query = "SELECT clients.* FROM clients Inner Join client_cgroups ON client_cgroups.client_id=clients.id AND client_cgroups.cgroup_id='".$cgroup_id."' WHERE clients.email_address = '".$change_user_email."' AND clients.reset_password_pincode = '".$verification_code."' AND clients.reset_password_pincode != ''  AND clients.reset_password_pincode != '0' AND clients.email_address!=''";
+            $result = $this->db->query( $query );
+            if( $result->num_rows() > 0 ) {
+                return $result->result_array();
+            } else {
+                return array();
+            }
+        }
+        
+        public function updateResetClientPassword($resetData, $client_id) {
+            $change_user_email = $resetData['change_user_email'];
+            $verification_code = $resetData['verification_code'];
+            $newpassword  = password_hash($resetData['newpassword'], PASSWORD_DEFAULT);
+            $plain_password = $resetData['newpassword'];
+            $cgroup_id = $resetData['cgroup_id'];
+
+            $query = "UPDATE clients SET  reset_password_pincode = '', password = '".$newpassword."', plain_password = '".$plain_password."',reset_password_expiry = '' WHERE id= '".$client_id."'";
+            $result = $this->db->query( $query );
+            if( $result ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        //================ client new flow end=======================
+    
 
 }
 ?>

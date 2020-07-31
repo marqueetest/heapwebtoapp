@@ -70,10 +70,10 @@
 		border-top: 1px solid rgba(0,0,0,.125);
 		}
 
-		.card .alert-danger{
+		.card .alert-danger, .card .alert-success{
 			margin: 5px 20px !important;
 		}
-		.error {
+		label.error {
 			color: #F00;
 			background-color: #FFF;
 		}
@@ -87,7 +87,7 @@
                 <div class="card shadow">
                     <div class="header">
                         <div class="logo text-center">
-							<<img src="https://heaplan.com/portal/assets/img/logo.png" alt="Heaplan">
+							<img src="https://heaplan.com/portal/assets/img/logo.png" alt="Heaplan">
                         </div>
                         <p class="lead">CLIENT LOGIN</p>
                     </div>
@@ -96,7 +96,16 @@
 
 						    echo '<p class="alert alert-danger"><strong>Error: </strong>'.$error.'</p>';
 						}
-						?>
+					?>
+					<?php
+						if( $this->session->flashdata("success") ) {
+							?>
+							<div class="alert alert-success">
+								<?php echo $this->session->flashdata("success") ?>
+							</div>
+							<?php
+						}
+					?>
                     <div class="card-body">
                         <form id="form_login" name="form_login" method="POST">
                             <div class="form-group">
@@ -120,7 +129,7 @@
                                 </div>
                             </div>
                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                <a href="forgot.php">Forgot Password?</a>
+                                <a href="forgot">Forgot Password?</a>
                                 <button type="submit" class="btn btn-primary" id="login_button">Login</button>
                             </div>
                         </form>
